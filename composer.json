@@ -1,0 +1,26 @@
+{
+  "name": "uginroot/doctrine-type-location",
+  "description": "Php doctrine type location",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Soroka Anton",
+      "email": "uginroot@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Uginroot\\DoctrineTypeLocation\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Uginroot\\DoctrineTypeLocation\\Test\\": "tests"
+    }
+  },
+  "require": {
+    "php": "^7.4",
+    "doctrine/orm": "~2.0|~3.0",
+    "uginroot/php-location": "^1.0"
+  }
+}
