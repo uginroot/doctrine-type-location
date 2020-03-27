@@ -56,7 +56,7 @@ class LocationDoctrineType extends Type
         }
 
         if ($platform instanceof MySqlPlatform) {
-            return sprintf('POINT(%f, %f)', $value->getLatitude(), $value->getLongitude());
+            return sprintf('POINT(%f %f)', $value->getLatitude(), $value->getLongitude());
         }
 
         throw new UnsupportedPlatformException(sprintf('Platform %s not support', get_class($platform)));
@@ -103,5 +103,25 @@ class LocationDoctrineType extends Type
         }
 
         return $types;
+    }
+
+    /**
+     * @param string $value
+     * @param AbstractPlatform $platform
+     * @return string
+     */
+    public function convertToPHPValueSQL($value, $platform): string
+    {
+        return sprintf('AsText(%s)', $value);
+    }
+
+    /**
+     * @param string $sqlExpr
+     * @param AbstractPlatform $platform
+     * @return string
+     */
+    public function convertToDatabaseValueSQL($sqlExpr, AbstractPlatform $platform): string
+    {
+        return sprintf('PointFromText(%s)', $sqlExpr);
     }
 }

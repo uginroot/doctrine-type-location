@@ -50,18 +50,7 @@ class LocationDoctrineTypeTest extends TestCase
     /**
      * @return array
      */
-    public function providerConvertToDataBaseValue():array
-    {
-        return [
-            'null' => [null, null],
-            'int' => [new Location(1, 1), 'POINT(1.000000, 1.000000)'],
-            'float' => [new Location(55.7539, 37.6208), 'POINT(55.753900, 37.620800)'],
-        ];
-    }
-    /**
-     * @return array
-     */
-    public function providerConvertToPhpValue():array
+    public function providerConvertValues():array
     {
         return [
             'null' => [null, null],
@@ -73,7 +62,7 @@ class LocationDoctrineTypeTest extends TestCase
     /**
      * @param $value
      * @param $expected
-     * @dataProvider providerConvertToDataBaseValue
+     * @dataProvider providerConvertValues
      */
     public function testConvertToDataBaseValue(?Location $value, ?string $expected):void
     {
@@ -83,7 +72,7 @@ class LocationDoctrineTypeTest extends TestCase
     /**
      * @param $expected
      * @param $value
-     * @dataProvider providerConvertToPhpValue
+     * @dataProvider providerConvertValues
      */
     public function testConvertToPhpValue(?Location $expected, ?string $value):void
     {
@@ -127,7 +116,7 @@ class LocationDoctrineTypeTest extends TestCase
     {
         $platform = new DB2Platform;
         $this->expectException(UnsupportedPlatformException::class);
-        $this->type->convertToPHPValue('POINT(1, 1)', $platform);
+        $this->type->convertToPHPValue('POINT(1 1)', $platform);
     }
 
     public function testUnsupportedPlatformExceptionToDatabaseValue():void
@@ -150,5 +139,19 @@ class LocationDoctrineTypeTest extends TestCase
     public function testGetName():void
     {
         $this->assertSame('Location', $this->type->getName());
+    }
+
+    public function testConvertToPHPValueSQL():void
+    {
+        $platform = new MySqlPlatform();
+        $string = $this->type->convertToPHPValueSQL('POINT(1, 1)', $platform);
+        $this->assertSame('AsText(POINT(1, 1))', $string);
+    }
+
+    public function testConvertToDatabaseValueSQ():void
+    {
+        $platform = new MySqlPlatform();
+        $string = $this->type->convertToPHPValueSQL('POINT(1, 1)', $platform);
+        $this->assertSame('PointFromText(POINT(1, 1))', $string);
     }
 }
