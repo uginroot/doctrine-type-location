@@ -37,7 +37,7 @@ class LocationDoctrineType extends Type
     {
 
         if ($platform instanceof MySqlPlatform) {
-            return 'point';
+            return 'POINT';
         }
 
         throw new UnsupportedPlatformException(sprintf('Platform %s not support', get_class($platform)));
