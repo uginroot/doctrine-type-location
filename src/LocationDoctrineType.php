@@ -9,21 +9,18 @@ use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Types\Type;
 use ReflectionClass;
 use ReflectionException;
-use Uginroot\DoctrineTypeLocation\Exceptions\UnsupportedPlatformException;
 use Uginroot\PhpLocation\Location;
 
 class LocationDoctrineType extends Type
 {
+    public const TYPE = 'point';
+
     /**
      * {@inheritdoc}
      */
     public function requiresSQLCommentHint(AbstractPlatform $platform):bool
     {
-        if ($platform instanceof MySqlPlatform) {
-            return true;
-        }
-
-        throw new UnsupportedPlatformException(sprintf('Platform %s not support', get_class($platform)));
+        return true;
     }
 
 
@@ -35,12 +32,7 @@ class LocationDoctrineType extends Type
      */
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform):string
     {
-
-        if ($platform instanceof MySqlPlatform) {
-            return 'POINT';
-        }
-
-        throw new UnsupportedPlatformException(sprintf('Platform %s not support', get_class($platform)));
+        return strtoupper(static::TYPE);
     }
 
 
@@ -51,15 +43,11 @@ class LocationDoctrineType extends Type
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
-        if ($value === null) {
-            return null;
-        }
-
-        if ($platform instanceof MySqlPlatform) {
+        if($value instanceof Location){
             return sprintf('POINT(%f %f)', $value->getLatitude(), $value->getLongitude());
         }
 
-        throw new UnsupportedPlatformException(sprintf('Platform %s not support', get_class($platform)));
+        return $value;
     }
 
     /**
@@ -69,16 +57,16 @@ class LocationDoctrineType extends Type
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        if ($value === null || $value instanceof Location) {
-            return $value;
-        }
-
-        if ($platform instanceof MySqlPlatform) {
+        if($value !== null){
             [$latitude, $longitude] = sscanf($value, 'POINT(%f %f)');
             return new Location($latitude, $longitude);
         }
+        return $value;
+    }
 
-        throw new UnsupportedPlatformException(sprintf('Platform %s not support', get_class($platform)));
+    public function canRequireSQLConversion(): bool
+    {
+        return true;
     }
 
     /**

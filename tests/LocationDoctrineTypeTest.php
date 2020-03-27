@@ -5,13 +5,11 @@ namespace Uginroot\DoctrineTypeLocation\Test;
 
 
 use Doctrine\DBAL\DBALException;
-use Doctrine\DBAL\Platforms\DB2Platform;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Types\Type;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionException;
-use Uginroot\DoctrineTypeLocation\Exceptions\UnsupportedPlatformException;
 use Uginroot\DoctrineTypeLocation\LocationDoctrineType;
 use Uginroot\PhpLocation\Location;
 
@@ -90,7 +88,7 @@ class LocationDoctrineTypeTest extends TestCase
     public function testGetSqlDeclaration():void
     {
         $actual = $this->type->getSQLDeclaration([], new MySqlPlatform());
-        $this->assertSame('point', $actual);
+        $this->assertSame('POINT', $actual);
     }
 
     public function testRequiresSqlCommentHint():void
@@ -98,33 +96,6 @@ class LocationDoctrineTypeTest extends TestCase
         $this->assertTrue($this->type->requiresSQLCommentHint(new MySqlPlatform()));
     }
 
-    public function testUnsupportedPlatformExceptionHint():void
-    {
-        $platform = new DB2Platform;
-        $this->expectException(UnsupportedPlatformException::class);
-        $this->type->requiresSQLCommentHint($platform);
-    }
-
-    public function testUnsupportedPlatformExceptionDeclaration():void
-    {
-        $platform = new DB2Platform;
-        $this->expectException(UnsupportedPlatformException::class);
-        $this->type->getSQLDeclaration([], $platform);
-    }
-
-    public function testUnsupportedPlatformExceptionToPhpValue():void
-    {
-        $platform = new DB2Platform;
-        $this->expectException(UnsupportedPlatformException::class);
-        $this->type->convertToPHPValue('POINT(1 1)', $platform);
-    }
-
-    public function testUnsupportedPlatformExceptionToDatabaseValue():void
-    {
-        $platform = new DB2Platform;
-        $this->expectException(UnsupportedPlatformException::class);
-        $this->type->convertToDatabaseValue(new Location(1, 1), $platform);
-    }
 
     public function testGetMappedDatabaseTypes():void
     {
@@ -148,10 +119,10 @@ class LocationDoctrineTypeTest extends TestCase
         $this->assertSame('AsText(POINT(1, 1))', $string);
     }
 
-    public function testConvertToDatabaseValueSQ():void
+    public function testConvertToDatabaseValueSQL():void
     {
         $platform = new MySqlPlatform();
-        $string = $this->type->convertToPHPValueSQL('POINT(1, 1)', $platform);
+        $string = $this->type->convertToDatabaseValueSQL('POINT(1, 1)', $platform);
         $this->assertSame('PointFromText(POINT(1, 1))', $string);
     }
 }
