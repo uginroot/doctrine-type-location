@@ -84,9 +84,6 @@ class LocationDoctrineTypeTest extends TestCase
         }
     }
 
-    /**
-     * @throws ReflectionException
-     */
     public function testGetSqlDeclaration():void
     {
         $actual = $this->type->getSQLDeclaration([], new MySqlPlatform());
