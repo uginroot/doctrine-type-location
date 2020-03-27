@@ -56,7 +56,7 @@ class LocationDoctrineType extends Type
         }
 
         if ($platform instanceof MySqlPlatform) {
-            return $value->toPoint();
+            return sprintf('POINT(%f, %f)', $value->getLatitude(), $value->getLongitude());
         }
 
         throw new UnsupportedPlatformException(sprintf('Platform %s not support', get_class($platform)));
@@ -74,7 +74,8 @@ class LocationDoctrineType extends Type
         }
 
         if ($platform instanceof MySqlPlatform) {
-            return Location::createFromPoint($value);
+            [$latitude, $longitude] = sscanf($value, 'POINT(%f %f)');
+            return new Location($latitude, $longitude);
         }
 
         throw new UnsupportedPlatformException(sprintf('Platform %s not support', get_class($platform)));
