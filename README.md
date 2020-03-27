@@ -29,8 +29,9 @@ class User{
 
     /**
      * @ORM\Column(type="Location")
+     * @var Location|null
      */
-    private ?Location $location = null;
+    private $location;
 
     /**
      * @return Location|null
