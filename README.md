@@ -4,7 +4,7 @@ Doctrine location type from this [Location](https://github.com/uginroot/php-loca
 
 ## Install
 ```bash
-composer request uginroot/doctrine-type-location:^1.0
+composer request uginroot/doctrine-type-location:^1.1
 ```
 
 ## Example
