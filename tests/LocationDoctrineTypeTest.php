@@ -132,4 +132,12 @@ class LocationDoctrineTypeTest extends TestCase
         $types = $this->type->getMappedDatabaseTypes($platform);
         $this->assertContains('point', $types);
     }
+
+    /**
+     * @throws ReflectionException
+     */
+    public function testGetName():void
+    {
+        $this->assertSame('Location', $this->type->getName());
+    }
 }
