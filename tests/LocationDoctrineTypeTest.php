@@ -17,7 +17,10 @@ use Uginroot\PhpLocation\Location;
 
 class LocationDoctrineTypeTest extends TestCase
 {
-    private ?LocationDoctrineType $type;
+    /**
+     * @var LocationDoctrineType|null
+     */
+    private $type;
 
     /**
      * @throws DBALException
