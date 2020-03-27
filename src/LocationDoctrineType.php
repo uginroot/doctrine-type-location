@@ -89,4 +89,18 @@ class LocationDoctrineType extends Type
         $reflectionClass = new ReflectionClass(Location::class);
         return $reflectionClass->getShortName();
     }
+
+    public function getMappedDatabaseTypes(AbstractPlatform $platform): array
+    {
+        $types = parent::getMappedDatabaseTypes($platform);
+
+        if ($platform instanceof MySqlPlatform) {
+            $platformType = 'point';
+            if(!in_array($platformType, $types)){
+                $types[] = $platformType;
+            }
+        }
+
+        return $types;
+    }
 }
