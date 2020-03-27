@@ -84,7 +84,7 @@ class LocationDoctrineType extends Type
      * @inheritDoc
      * @throws ReflectionException
      */
-    public function getName()
+    public function getName():string
     {
         $reflectionClass = new ReflectionClass(Location::class);
         return $reflectionClass->getShortName();
